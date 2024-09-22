@@ -26,7 +26,8 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 const mongoose = require('mongoose');
 require('dotenv').config();
-mongoose.connect(process.env.MONGO_URL).then(() => { console.log('Mongoose connected') }).catch((err) => { console.log(err) });
+mongoose.connect(process.env.MONGO_URL,  {useNewUrlParser: true,
+    useUnifiedTopology: true}).then(() => { console.log('Mongoose connected') }).catch((err) => { console.log(err) });
 const httpStatusText = require('./utils/httpStatusText');
 app.use('/about',
     (req, res, next) => {
