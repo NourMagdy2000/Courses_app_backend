@@ -38,7 +38,7 @@ router.route('/register').post(upload.single('avatar'), usersController.register
 
 router.route('/login').post(usersController.login);
 
-router.get("/socialLogin/success", usersController.socialLogin, passport.authenticate('google', { scope: ['profile', 'email'] }));
+router.get("/socialLogin/success", usersController.socialLogin);
 
 
 ////failed case route
