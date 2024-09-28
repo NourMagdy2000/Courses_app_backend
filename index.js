@@ -4,10 +4,16 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 const path = require("path");
+const passport = require('passport');
+
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+// const googleStartegy=require('/utils/functions/passportConfig');
+// googleStartegy.passportConfig();
+
+
 // const { MongoClient } = require('mongodb');
 // const client = new MongoClient(url);
-
+app.use(passport.initialize());
 // ////mongoose connect
 
 

@@ -3,7 +3,7 @@ const User = require("../models/users.model");
 const passport = require('passport');
 
 // Register a Strategy to be passed when authenticate () method is called 
-passport.use(new GoogleStrategy({
+const googleStartegy =passport.use(new GoogleStrategy({
     clientID: process.env.CLIENT_ID,
     clientSecret: process.env.CLIENT_SECRET,
     callbackURL: process.env.CALLBACK_URL,
@@ -41,3 +41,5 @@ passport.serializeUser((user, done)=>{
 passport.deserializeUser((user, done) =>{
     done(null, user);
 });
+
+module.exports={googleStartegy};
