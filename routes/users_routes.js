@@ -1,8 +1,8 @@
-
+const httpStatusText = require('../utils/strings/httpStatusText')
 
 const verifyToken = require('../middleware/verify_token');
 const multer = require('multer');
-
+const passport = require('passport');
 const diskStorage = multer.diskStorage({
 
     destination: (req, file, cb) => {
@@ -16,10 +16,10 @@ const diskStorage = multer.diskStorage({
 
 const typeFilter = (req, file, cb) => {
     if (file.mimetype.split("/")[0] === "image" || file.mimetype.split("/")[0].includes("image")) {
-         cb(null, true);
+        cb(null, true);
     } else {
-        const appError = require('../utils/appError');
-        const httpStatusText = require('../utils/httpStatusText');
+        const appError = require('../utils/functions/appError');
+        const httpStatusText = require('../utils/strings/httpStatusText');
         const error = appError.createError(500, "Please upload only images.", httpStatusText.ERROR);
         cb(error, false);
     }
@@ -37,5 +37,25 @@ router.route('/register').post(upload.single('avatar'), usersController.register
 
 router.route('/login').post(usersController.login);
 
+router.get("/socialLogin/success", usersController.socialLogin, passport.authenticate('google', { scope: ['profile', 'email'] }));
 
+
+////failed case route
+router.get("/socialLogin/failed", asyncHandler(async (req, res) => {
+    res.status(401).json({
+        status: httpStatusText.FAIL,
+        message: "Login failed", data: null
+    })
+}));
+
+///// auth
+router.get("/auth/google", passport.authenticate("google", ["profile", "email"]));
+
+//// callback
+router.get("/auth/google/callback",
+    passport.authenticate("google", {
+        successRedirect: "/socialLogin/success",
+        failureRedirect: "/socialLogin/failed"
+    })
+);
 module.exports = router;    

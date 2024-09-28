@@ -1,6 +1,6 @@
 
-const appError = require('../utils/appError');
-const httpStatusText = require('../utils/httpStatusText');
+const appError = require('../utils/functions/appError');
+const httpStatusText = require('../utils/strings/httpStatusText');
 
 module.exports = (...allowedRoles) => {
     return (req, res, next) => {

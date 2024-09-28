@@ -26,9 +26,17 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 const mongoose = require('mongoose');
 require('dotenv').config();
-mongoose.connect(process.env.MONGO_URL,  {useNewUrlParser: true,
-    useUnifiedTopology: true}).then(() => { console.log('Mongoose connected') }).catch((err) => { console.log(err) });
-const httpStatusText = require('./utils/httpStatusText');
+mongoose.connect(process.env.MONGO_URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+}).then(() => { console.log('Mongoose connected') }).catch((err) => { console.log(err) });
+
+
+
+const httpStatusText = require('./utils/strings/httpStatusText');
+
+
+
 app.use('/about',
     (req, res, next) => {
         console.log('METHOD', req.method, 'URL', req.url), 'this is in about only !';

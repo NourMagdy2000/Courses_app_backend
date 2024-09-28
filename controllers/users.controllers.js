@@ -1,10 +1,10 @@
 
 const User = require('../models/users.model');
-const httpStatusText = require('../utils/httpStatusText');
+const httpStatusText = require('../utils/strings/httpStatusText');
 const async_wrapper = require('../middleware/async_middleware');
-const appError = require('../utils/appError');
+const appError = require('../utils/functions/appError');
 const bcrypt = require('bcrypt');
-const genetateJWS = require('../utils/genertateJWS');
+const genetateJWS = require('../utils/functions/genertateJWS');
 
 
 
@@ -34,7 +34,7 @@ const register = async_wrapper(async (req, res, next) => {
 
     //generate token
     let fileName = req.file.filename;
-    const newUser = new User({ firstName, lastName, email, password: hashedPassword, age, phone, role, avatar:fileName });
+    const newUser = new User({ firstName, lastName, email, password: hashedPassword, age, phone, role, avatar: fileName });
     const token = await genetateJWS({ email: newUser.email, id: newUser.id, role: newUser.role });
     newUser.token = token;
     await newUser.save();
@@ -71,7 +71,67 @@ const login = async_wrapper(async (req, res, next) => {
 
 
 
+const socialLogin = async_wrapper(async (req, res, next) => {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+        const error = appError.createError(404, "Please provide email and password !", httpStatusText.FAIL);
+        return next(error);
+    }
+
+    const user = await User.findOne({ email: req.user.email });
+    if (findUser) {
+        const token = await genetateJWS({ email: user.email, id: user.id, role: user.role });
+            user.token = token;
+            await user.save();
+        return res.status(200).json({
+            status: httpStatusText.SUCCESS,
+            message: "Login Successful", data: {
+                token: user.token,
+                username: findUser?.firstname + " " + findUser?.lastname,
+                user_image: findUser?.user_image,
+                auth: "google"
+            },
+
+        })
+
+    } else {
+        throw new appError(500, "User not found !", httpStatusText.ERROR);
+    }
 
 
 
-module.exports = { getAllUsers, register, login }
+
+
+
+    // const { email, password } = req.body;
+    // if (!email || !password) {
+    //     const error = appError.createError(404, "Please provide email and password !", httpStatusText.FAIL);
+    //     return next(error);
+    // }
+
+    // const user = await User.findOne({ email });
+
+    // if (!user) {
+    //     const error = appError.createError(500, "User not found !", httpStatusText.ERROR);
+    //     return next(error);
+    // }
+    // const matchedPassword = await bcrypt.compare(password, user.password);
+
+    // if (user && matchedPassword) {
+    //     const token = await genetateJWS({ email: user.email, id: user.id, role: user.role });
+    //     user.token = token;
+    //     await user.save();
+    //     res.status(200).json({ "status": httpStatusText.SUCCESS, "data": { "token": user.token } });
+    // } else {
+    //     const error = appError.createError(500, "Invalid credentials !", httpStatusText.FAIL);
+    //     return next(error);
+    // }
+})
+
+
+
+
+
+
+module.exports = { getAllUsers, register, login,socialLogin }

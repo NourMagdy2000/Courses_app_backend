@@ -3,11 +3,11 @@
 // let { course } = require('../data/courses');
 let course = require('../models/courses.model');
 let { validationResult } = require('express-validator');
-let httpStatusText = require('../utils/httpStatusText');
+let httpStatusText = require('../utils/strings/httpStatusText');
 const async_wrapper = require('../middleware/async_middleware');
 
-let AppError = require('../utils/appError');
-const appError = require('../utils/appError');
+let AppError = require('../utils/functions/appError');
+const appError = require('../utils/functions/appError');
 
 
 
@@ -137,14 +137,16 @@ let deleteCourse = async_wrapper(async (req, res, next) => {
         // res.status(404).json({ "status": httpStatusText.FAIL, "data": { "course": " Course not found !" } }) 
 
         return next(error);
-    }else{   const response = await course.deleteOne({ _id: id });
-    // if (!deleteCourse) { res.status(404).json({ msg: " Course not found !" }) }
+    } else {
+        const response = await course.deleteOne({ _id: id });
+        // if (!deleteCourse) { res.status(404).json({ msg: " Course not found !" }) }
 
-    // courses = courses.filter((course) => { return course.id !== id })
-    return res.status(200).json({ "status": httpStatusText.SUCCESS, "msg": null });}
- 
+        // courses = courses.filter((course) => { return course.id !== id })
+        return res.status(200).json({ "status": httpStatusText.SUCCESS, "msg": null });
+    }
 
-                 
+
+
 });
 
 
