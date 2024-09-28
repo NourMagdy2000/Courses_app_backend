@@ -29,6 +29,7 @@ const express = require("express");
 const usersController = require('../controllers/users.controllers');
 const { body } = require('express-validator');
 const router = express.Router();
+const async_wrapper = require('../middleware/async_middleware');
 
 
 router.route('/').get(verifyToken, usersController.getAllUsers);
@@ -41,7 +42,7 @@ router.get("/socialLogin/success", usersController.socialLogin, passport.authent
 
 
 ////failed case route
-router.get("/socialLogin/failed", asyncHandler(async (req, res) => {
+router.get("/socialLogin/failed", async_wrapper(async (req, res) => {
     res.status(401).json({
         status: httpStatusText.FAIL,
         message: "Login failed", data: null
