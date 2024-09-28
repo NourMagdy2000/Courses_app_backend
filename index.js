@@ -1,3 +1,4 @@
+const User = require("models/users.model");
 const express = require("express");
 const cors = require("cors");
 const app = express();
@@ -11,7 +12,7 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
-const User = require("E:/Backend learning/Courses_app_backend/models/users.model.js");
+
 
 passport.use(new GoogleStrategy({
     clientID: process.env.CLIENT_ID,
